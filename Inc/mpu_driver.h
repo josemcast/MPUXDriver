@@ -1,4 +1,8 @@
-/*! \file mpu_driver.h */
+/** \file mpu_driver.h 
+ * 
+ * Created on: Jul 05, 2023
+ * Author: josemcast
+*/
 
 #ifndef MPU_DRIVER_H
 #define MPU_DRIVER_H

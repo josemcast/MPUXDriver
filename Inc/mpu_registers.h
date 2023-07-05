@@ -1,4 +1,8 @@
-/** \file mpu_registers.h */
+/** \file mpu_registers.h 
+ *  
+ *  Created on: Jul 05, 2023
+ *  Author: josemcast
+*/
 
 #ifndef MPU_REGISTERS_H
 #define MPU_REGISTERS_H
