@@ -3,19 +3,13 @@
 
 //Callback functions for TX and RX
 static mpuRetStatus_t TXData(uint8_t addr, uint8_t *data, uint8_t size)
-    {
-        if(size > 1)
-        {
-            if( (data[0] == 0x6B) && (data[1] == 0x00) )
-            {
-                return MPU_STATUS_OK;
-            }
-        }
-
-        if(size == 1)
-            return MPU_STATUS_OK;
-
-        return MPU_STATUS_ERROR;
+{
+	
+	if(size < 0)
+		return MPU_STATUS_ERROR;
+    else
+		return MPU_STATUS_OK;
+		
 }
 
 static mpuRetStatus_t RXData(uint8_t addr, uint8_t *data, uint8_t size)
@@ -201,6 +195,22 @@ void read_all_in_one_batch()
 
 }
 
+void start_device_reset_should_return_state_to_not_init()
+{
+	mpuInit(FS_SEL0, FS_SEL0, TXData, RXData);
+
+	TEST_ASSERT_EQUAL(MPU_STATUS_OK, isMPUDriverReady());
+
+	mpuRetStatus_t ret = mpuDeviceReset();
+
+	TEST_ASSERT_EQUAL(MPU_STATUS_OK, ret);
+
+	float buffer[3];
+	ret = mpuReadAccelerometer(buffer);
+
+	TEST_ASSERT_EQUAL(MPU_STATUS_NOT_INIT, ret);
+}
+
 int main(void)
 {
 	UNITY_BEGIN();
@@ -217,13 +227,11 @@ int main(void)
 	RUN_TEST(util_function_should_generate_16bits_variable_from_bytes);
 
 	RUN_TEST(read_accelerometer_should_return_three_valid_measurements);
-	
 	RUN_TEST(read_temperature_should_return_valid_measurement);
-
 	RUN_TEST(read_gyro_should_return_three_valid_measurements);
-
 	RUN_TEST(read_all_in_one_batch);
 
+	RUN_TEST(start_device_reset_should_return_state_to_not_init);
 
 	return UNITY_END();
 }
