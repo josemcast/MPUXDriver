@@ -122,6 +122,14 @@ mpuRetStatus_t mpuReadGyro(float *buffer);
 mpuRetStatus_t mpuReadTemperature(float *buffer);
 
 
+/**
+ * @brief Reset all MPU registers to default value. mpuInit(...) should be called again with proper config options
+ * 
+ * @return mpuRetStatus_t 
+ */
+mpuRetStatus_t mpuDeviceReset();
+
+
 /********************************************************************************
 *************************** Utils Functions *************************************
 ********************************************************************************/

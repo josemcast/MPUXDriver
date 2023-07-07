@@ -113,8 +113,8 @@ mpuRetStatus_t mpuInit(mpuFSConfig_t accelFS, mpuFSConfig_t gyroFS, callbackSign
             return MPU_STATUS_ERROR;
 
         default: {
-            //Try init device again
     
+            //Try init device again
             mpuRetStatus_t ret = initMPUUnit();
             
             if(ret != MPU_STATUS_OK)
@@ -317,6 +317,33 @@ mpuRetStatus_t mpuReadTemperature(float *buffer)
 
     return MPU_STATUS_OK;
     
+}
+
+mpuRetStatus_t mpuDeviceReset()
+{
+    switch(currentState)
+    {
+        case MPUNotInit:
+            return MPU_STATUS_NOT_INIT;
+
+        case MPUBusy:
+            return MPU_STATUS_ERROR;
+
+        default: {
+
+            currentState = MPUBusy;
+
+            uint8_t data[2];
+            data[0] = MPU_PWR_MGMT_1;
+            data[1] = (0x01 << 7);
+
+            mpuRetStatus_t ret = internalConfigHandler.callbackTx(MPU_ADDRESS, data, 2);
+
+            currentState = (ret == MPU_STATUS_OK ? MPUNotInit : MPUCommError);
+
+            return ret;
+        }
+    }
 }
 
 
